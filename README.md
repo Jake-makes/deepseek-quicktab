@@ -1,2 +1,2 @@
 # deepseek-quicktab
-A quick taskbar launcher for deepseek on windows/linux
+A quick taskbar launcher for deepseek on windows
