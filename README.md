@@ -17,6 +17,6 @@ A minimal Electron wrapper for DeepSeek Chat that runs in your system tray with 
 - Popup window positioned above taskbar
 - Lightweight with minimal dependencies
 
-###License
+### License
 
 GPL-3.0 license © Jake-makes
