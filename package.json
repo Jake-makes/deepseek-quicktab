@@ -4,24 +4,41 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "author": "Jake-makes",
   "license": "GPL-3.0 license",
+  "Dependencies": {
+    "auto-launch": "^5.0.5",
+    "electron-updater": "^6.1.7",
+    "electron": "^28.0.0"
+  },
   "devDependencies": {
-    "electron-builder": "^24.9.1"
+      "electron-builder": "^24.9.1"
   },
   "build": {
     "appId": "deepseek.quicktab",
+    "productName": "DeepSeek QuickTab",
     "win": {
       "target": "nsis",
       "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
     },
     "extraResources": [
       {
         "from": "assets",
         "to": "assets"
       }
-    ]
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "runAfterFinish": true
+    }
   }
 }
