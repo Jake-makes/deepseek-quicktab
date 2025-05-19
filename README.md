@@ -1,6 +1,6 @@
-# DeepSeek QuickTab - Electron
+#  DeepSeek QuickTab - Electron
 
-![{57C6C857-D019-4F18-B386-4EF2503A54C5}](https://github.com/user-attachments/assets/e62290c2-4015-40ed-8abd-7a73231de495)
+![{A4C89D95-D86A-4835-814D-70DB4C1772CD}](https://github.com/user-attachments/assets/4f63d38b-cdb9-4316-a507-3b360ab031a7)
 
 A minimal Electron wrapper for DeepSeek Chat that runs in your system tray with a convenient popup window.
 
