@@ -1,4 +1,4 @@
-<img src="(https://github.com/Jake-makes/deepseek-quicktab/blob/main/assets/tray-icon.png)" width="100">
+<img src="https://github.com/Jake-makes/deepseek-quicktab/blob/main/assets/tray-icon.png" width="100">
 # DeepSeek QuickTab - Electron
 
 ![{A4C89D95-D86A-4835-814D-70DB4C1772CD}](https://github.com/user-attachments/assets/4f63d38b-cdb9-4316-a507-3b360ab031a7)
