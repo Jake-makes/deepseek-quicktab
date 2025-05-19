@@ -6,9 +6,12 @@ A minimal Electron wrapper for DeepSeek Chat that runs in your system tray with 
 
 ## Features
 
+- (NEW!) Auto-update
+- (NEW!) Fresh new icon
+- (NEW!) Persistent login sessions
+- (NEW!) Configurable auto-start
 - Quick access to DeepSeek Chat from your taskbar
 - Small popup window that appears above your taskbar icon
-- Persistent session (stays logged in)
 - Click outside to close the popup
 - No menu bar for cleaner interface
 
