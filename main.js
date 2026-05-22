@@ -1,7 +1,7 @@
 const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require('electron')
 const path = require('path')
 const AutoLaunch = require('auto-launch')
-const { exec } = require('child_process')
+const { execFile } = require('child_process')
 const fs = require('fs')
 
 // Auto-launch configuration
@@ -101,13 +101,24 @@ async function configureAutoLaunch() {
   }
 }
 
-// Windows registry method
+// Windows registry method - Fixed to prevent command injection
 function addToStartup() {
   const appPath = process.execPath
-  const regKey = `REG ADD HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run /v "DeepSeek QuickTab" /t REG_SZ /d "${appPath}" /f`
   
-  exec(regKey, (error) => {
-    if (error) console.error('Failed to add to startup:', error)
+  // Use execFile with array of arguments to prevent command injection
+  execFile('reg', [
+    'ADD',
+    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run',
+    '/v', 'DeepSeek QuickTab',
+    '/t', 'REG_SZ',
+    '/d', appPath,
+    '/f'
+  ], (error) => {
+    if (error) {
+      console.error('Failed to add to startup:', error)
+    } else {
+      console.log('Successfully added to startup')
+    }
   })
 }
 
