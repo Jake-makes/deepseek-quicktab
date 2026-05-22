@@ -2,6 +2,7 @@ const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require('electr
 const path = require('path')
 const AutoLaunch = require('auto-launch')
 const { exec } = require('child_process')
+const fs = require('fs')
 
 // Auto-launch configuration
 const deepseekAutoLauncher = new AutoLaunch({
@@ -12,6 +13,79 @@ const deepseekAutoLauncher = new AutoLaunch({
 let mainWindow
 let tray = null
 let popupWindow = null
+let licenseWindow = null
+
+// Path to store first-run state
+const firstRunFlagPath = path.join(app.getPath('userData'), 'license-seen.json')
+
+// Check if user has seen the license
+function hasSeenLicense() {
+  try {
+    if (fs.existsSync(firstRunFlagPath)) {
+      const data = JSON.parse(fs.readFileSync(firstRunFlagPath, 'utf8'))
+      return data.licenseSeen === true
+    }
+  } catch (error) {
+    console.error('Error reading license flag:', error)
+  }
+  return false
+}
+
+// Mark license as seen
+function markLicenseAsSeen() {
+  try {
+    const userData = path.dirname(firstRunFlagPath)
+    if (!fs.existsSync(userData)) {
+      fs.mkdirSync(userData, { recursive: true })
+    }
+    fs.writeFileSync(firstRunFlagPath, JSON.stringify({ licenseSeen: true, timestamp: new Date().toISOString() }))
+  } catch (error) {
+    console.error('Error marking license as seen:', error)
+  }
+}
+
+// Create license popup window
+function createLicenseWindow() {
+  if (licenseWindow) {
+    licenseWindow.focus()
+    return
+  }
+
+  licenseWindow = new BrowserWindow({
+    width: 560,
+    height: 720,
+    minWidth: 500,
+    minHeight: 600,
+    icon: path.join(__dirname, 'assets', 'icon.ico'),
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'license-preload.js')
+    }
+  })
+
+  licenseWindow.loadFile(path.join(__dirname, 'license-popup.html'))
+  licenseWindow.show()
+
+  licenseWindow.on('closed', () => {
+    licenseWindow = null
+  })
+}
+
+// Handle IPC messages from license window
+ipcMain.on('license-accepted', () => {
+  markLicenseAsSeen()
+  if (licenseWindow) {
+    licenseWindow.close()
+  }
+})
+
+ipcMain.on('view-full-license', () => {
+  // Open LICENSE file in default application or show in a new window
+  const licensePath = path.join(__dirname, 'LICENSE')
+  require('electron').shell.openPath(licensePath)
+})
 
 // Configure auto-start
 async function configureAutoLaunch() {
@@ -69,6 +143,8 @@ function createWindow() {
       checked: true,
       click: () => toggleAutoLaunch()
     },
+    { type: 'separator' },
+    { label: 'View License', click: () => createLicenseWindow() },
     { type: 'separator' },
     { label: 'Quit', click: () => app.quit() }
   ])
@@ -146,6 +222,11 @@ if (!gotTheLock) {
   app.whenReady().then(async () => {
     await configureAutoLaunch()
     createWindow()
+
+    // Show license on first run
+    if (!hasSeenLicense()) {
+      createLicenseWindow()
+    }
   })
 }
 
